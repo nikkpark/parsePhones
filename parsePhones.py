@@ -9,8 +9,10 @@ starting_page = 'https://place-for-your-site.com'
 def getPage(raw):
     return urlopen(raw)
 
+
 def parsePage(html):
     return BeautifulSoup(html, 'lxml')
+
 
 def collectHeaders(bsObj):
     h3_raw_list = bsObj.findAll('h3')
@@ -19,6 +21,7 @@ def collectHeaders(bsObj):
     for header in h3_raw_list:
         h3_list.append([header.text.upper()])
     return h3_list
+
 
 def collectData(bsObj):
     tbody_raw_list = bsObj.find('section').findAll('tbody')
@@ -34,8 +37,8 @@ def collectData(bsObj):
             tmp.append(td_raw_list[lst][i].text.strip().replace('\n', ' | '))
             data_list.append(tmp)
             tmp = []
-
     return data_list
+
 
 def organizeData(data):
     counter = 0
@@ -46,9 +49,8 @@ def organizeData(data):
             counter = counter + 3
         else:
             continue
-
-
     return gruppen_data
+
 
 def writeCsv(headers, data):
     with open('phonebook.csv', 'w',  newline='') as file:
@@ -62,6 +64,7 @@ def writeCsv(headers, data):
                 continue
             else:
                 writer.writerow((data[i][0][0], data[i][1][0], data[i][2][0]))
+                
 
 def writeXmlx():
     wb = openpyxl.Workbook()
@@ -75,10 +78,12 @@ def writeXmlx():
         for row in reader:
             ws.append(row)
     wb.save('phonebook.xlsx')
+    
 
 def debugTheBug(*args):
     for i in args:
         print(i)
+        
 
 def run():
     bs = parsePage(getPage(starting_page))
